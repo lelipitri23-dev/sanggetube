@@ -1,0 +1,224 @@
+<%- include('partials/header') %>
+
+<div class="flex flex-col lg:flex-row gap-8 pb-12">
+    
+    <main class="w-full lg:w-[70%] order-1">
+        <nav class="flex text-sm text-gray-400 mb-4" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 md:space-x-2">
+                <li class="inline-flex items-center">
+                    <a href="/" class="hover:text-pink-500 transition-colors">Home</a>
+                </li>
+                <li><span class="text-gray-600 mx-2">/</span></li>
+                <li class="truncate max-w-[200px] md:max-w-md text-gray-200">
+                    <span class="text-gray-500">Cosplay</span>
+                    <span class="text-gray-600 mx-2">/</span>
+                    <%= cosplay.title %>
+                </li>
+            </ol>
+        </nav>
+
+        <article class="flex flex-col items-center justify-center text-center">
+            
+            <% if (cosplay.categories && cosplay.categories.length > 0) { %>
+            <header class="mb-2 sm:mb-3">
+                <div class="text-[10px] sm:text-xs uppercase tracking-widest text-pink-500 font-bold flex flex-wrap justify-center gap-2">
+                    <% cosplay.categories.forEach(cat => { 
+                        const catSlug = cat.toLowerCase().trim().replace(/ /g, '-');
+                    %>
+                        <a href="/category/<%= catSlug %>" class="hover:text-pink-400 transition-colors bg-pink-500/10 px-2 py-0.5 rounded border border-pink-500/20">
+                            <%= cat %>
+                        </a>
+                    <% }) %>
+                </div>
+            </header>
+            <% } %>
+
+            <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white mb-3 sm:mb-4 leading-tight">
+                <%= cosplay.title %>
+            </h1>
+
+            <div class="w-16 sm:w-20 h-1.5 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full mb-4 sm:mb-6"></div>
+
+            <div class="text-[11px] sm:text-xs text-gray-400 uppercase tracking-wide mb-6 sm:mb-8 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+                <span class="flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    <time datetime="<%= new Date(cosplay.created_at).toISOString() %>"><%= new Date(cosplay.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) %></time>
+                </span>
+                <span class="flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                    <span><%= cosplay.views %> Views</span>
+                </span>
+            </div>
+
+            <section class="w-full max-w-2xl mb-8">
+                <dl class="grid grid-cols-1 gap-3 text-left text-sm md:text-base text-gray-300 font-medium">
+                    <% if (cosplay.cosplayer) { %>
+                        <div class="flex justify-between border-b border-gray-800 pb-2">
+                            <dt class="text-gray-500">Cosplayer</dt>
+                            <dd class="text-pink-400 font-semibold"><%= cosplay.cosplayer %></dd>
+                        </div>
+                    <% } %>
+                    <% if (cosplay.character) { %>
+                        <div class="flex justify-between border-b border-gray-800 pb-2">
+                            <dt class="text-gray-500">Character</dt>
+                            <dd class="text-blue-400 font-semibold"><%= cosplay.character %></dd>
+                        </div>
+                    <% } %>
+                    <div class="flex justify-between border-b border-gray-800 pb-2">
+                        <dt class="text-gray-500">Password Zip</dt>
+                        <dd>
+                            <% if (cosplay.password_zip) { %>
+                                <code class="bg-gray-900 px-2.5 py-0.5 rounded text-green-400 font-mono select-all border border-gray-800"><%= cosplay.password_zip %></code>
+                            <% } else { %>
+                                <span class="text-gray-600 italic">No Password</span>
+                            <% } %>
+                        </dd>
+                    </div>
+                </dl>
+            </section>
+
+            <% if (cosplay.downloads && (cosplay.downloads.mediafire || cosplay.downloads.sorafolder || cosplay.downloads.gofile)) { %>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 w-full max-w-3xl mb-8 sm:mb-10">
+                <% if (cosplay.downloads.mediafire) { %>
+                <a href="<%= cosplay.downloads.mediafire %>" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-transform hover:scale-105 shadow-lg">
+                    <span>☁️ Mediafire</span>
+                </a>
+                <% } %>
+                <% if (cosplay.downloads.sorafolder) { %>
+                <a href="<%= cosplay.downloads.sorafolder %>" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 px-5 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-transform hover:scale-105 shadow-lg">
+                    <span>📂 SoraFolder</span>
+                </a>
+                <% } %>
+                <% if (cosplay.downloads.gofile) { %>
+                <a href="<%= cosplay.downloads.gofile %>" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 px-5 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-transform hover:scale-105 shadow-lg">
+                    <span>🍀 Gofile</span>
+                </a>
+                <% } %>
+            </div>
+            <% } %>
+
+            <% if (cosplay.video_embed) { %>
+            <div class="w-full max-w-5xl mb-8 overflow-hidden rounded-xl border border-gray-800 shadow-lg shadow-purple-900/20">
+                <div class="aspect-video relative bg-black">
+                    <iframe src="<%= worker_url %>/?url=<%= encodeURIComponent(cosplay.video_embed) %>" class="absolute top-0 left-0 w-full h-full" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+            <% } %>
+
+            <% if (cosplay.gallery && cosplay.gallery.length > 0) { %>
+            <div class="w-full max-w-6xl">
+                <h3 class="text-lg font-bold text-white mb-6 flex items-center gap-2"><span class="text-pink-500"></span> Galeri Foto</h3>
+                <div class="flex flex-col gap-4">
+                    <% cosplay.gallery.forEach((img, index) => { %>
+                    <figure class="rounded-lg overflow-hidden border border-gray-800 shadow-lg">
+                        <img src="<%= img %>" loading="lazy" alt="<%= cosplay.title %> - <%= index + 1 %>" class="w-full h-auto">
+                    </figure>
+                    <% }) %>
+                </div>
+            </div>
+            <% } %>
+        </article>
+
+        <% if (typeof cosplay.tags !== 'undefined' && cosplay.tags && cosplay.tags.length > 0) { %>
+    <div class="mt-8">
+        <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+            <span class="text-pink-500">🏷️</span> Tags
+        </h3>
+        <div class="flex flex-wrap gap-2">
+            <% cosplay.tags.forEach(tag => { 
+                let tagName = '';
+                let tagSlug = '';
+
+                if (typeof tag === 'string') {
+                    tagName = tag;
+                    // PERBAIKAN URL:
+                    // 1. .replace(/[^a-z0-9]+/g, '-') -> Ganti SEMUA simbol (termasuk / dan spasi) jadi strip
+                    // 2. .replace(/^-+|-+$/g, '')     -> Hapus strip di awal/akhir jika ada
+                    tagSlug = tag.toLowerCase()
+                        .replace(/[^a-z0-9]+/g, '-') 
+                        .replace(/^-+|-+$/g, '');
+                } else if (typeof tag === 'object' && tag.name) {
+                    tagName = tag.name;
+                    // Lakukan hal yang sama jika slug object tidak ada
+                    tagSlug = tag.slug || tag.name.toLowerCase()
+                        .replace(/[^a-z0-9]+/g, '-')
+                        .replace(/^-+|-+$/g, '');
+                }
+
+                if (tagName) {
+            %>
+            <a href="/tag/<%= tagSlug %>" class="px-3 py-1 bg-gray-800 hover:bg-purple-600 text-white text-sm rounded-full transition-colors border border-gray-700 hover:border-purple-500">
+                <%= tagName %>
+            </a>
+            <% } }) %>
+        </div>
+    </div>
+<% } %>
+
+    </main>
+
+    <aside class="w-full lg:w-[30%] order-2">
+        <% if (related && related.length > 0) { %>
+        <section class="sticky top-4">
+            <h3 class="text-lg font-bold text-white mb-6 flex items-center gap-2">
+                <span class="w-1.5 h-6 bg-pink-500 rounded-full"></span> Terkait
+            </h3>
+            <div class="flex flex-col gap-4">
+                <% related.forEach(item => { %>
+                <article class="group bg-transparent rounded-lg overflow-hidden border border-gray-800 hover:border-pink-500/50 transition-all flex gap-3 p-2">
+                    <a href="/cosplay/<%= item.slug %>" class="relative w-24 h-24 flex-shrink-0 overflow-hidden rounded">
+                        <img src="<%= item.gallery[0] %>" alt="<%= item.title %>" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    </a>
+                    <div class="flex flex-col justify-center">
+                        <h4 class="font-semibold text-xs text-white line-clamp-2 group-hover:text-pink-400">
+                            <a href="/cosplay/<%= item.slug %>"><%= item.title %></a>
+                        </h4>
+                    </div>
+                </article>
+                <% }) %>
+            </div>
+        </section>
+        <% } %>
+    </aside>
+
+</div>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "<%= cosplay.title %>",
+  "image": ["<%= current_image %>"],
+  "datePublished": "<%= new Date(cosplay.created_at).toISOString() %>",
+  "author": [{
+      "@type": "Organization",
+      "name": "<%= site_name %>",
+      "url": "<%= site_url %>"
+    }]
+}
+</script>
+
+<button id="scrollToTopBtn" aria-label="Scroll ke atas" class="fixed bottom-6 right-6 z-50 p-3 bg-pink-600 hover:bg-pink-700 text-white rounded-full shadow-lg transition-all duration-300 opacity-0 invisible translate-y-10 group border border-pink-400/50">
+    <svg class="w-6 h-6 transform group-hover:-translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+    </svg>
+</button>
+
+<script>
+    const scrollBtn = document.getElementById('scrollToTopBtn');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+            scrollBtn.classList.remove('opacity-0', 'invisible', 'translate-y-10');
+        } else {
+            scrollBtn.classList.add('opacity-0', 'invisible', 'translate-y-10');
+        }
+    });
+    scrollBtn.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth' // Efek scroll halus
+        });
+    });
+</script>
+
+<%- include('partials/footer') %>

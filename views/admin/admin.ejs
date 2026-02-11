@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - BokepTube</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .active-tab { border-bottom: 2px solid #3b82f6; color: #1d4ed8; }
+        .hidden-panel { display: none; }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans min-h-screen flex flex-col">
+    
+    <nav class="bg-gray-900 text-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <span class="text-2xl">🤖</span>
+                <h1 class="text-xl font-bold tracking-tight">Admin Panel</h1>
+            </div>
+            <div class="flex items-center gap-6 text-sm font-medium">
+                <a href="/" target="_blank" class="text-gray-300 hover:text-white transition flex items-center gap-1">
+                    <span>Lihat Website</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                </a>
+                <a href="/admin/logout" class="text-red-400 hover:text-red-300 transition">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto mt-8 p-4 max-w-5xl flex-grow">
+        
+        <div class="flex border-b border-gray-300 mb-6 bg-white rounded-t-lg overflow-hidden shadow-sm">
+            <button onclick="switchTab('video')" id="tab-video" class="flex-1 py-4 text-center font-bold text-gray-600 hover:bg-gray-50 transition active-tab">
+                🎬 Scraper Video
+            </button>
+            <button onclick="switchTab('cosplay')" id="tab-cosplay" class="flex-1 py-4 text-center font-bold text-gray-600 hover:bg-gray-50 transition">
+                👘 Scraper Cosplay
+            </button>
+        </div>
+
+        <div id="panel-video" class="bg-white p-6 rounded-b-lg shadow-xl">
+            <h2 class="text-xl font-bold mb-4 text-gray-800 flex items-center gap-2">
+                <span class="text-blue-600">Video</span> Mass Scraper
+            </h2>
+            <p class="text-sm text-gray-500 mb-4">Paste link video (satu per baris) untuk di-scrape otomatis.</p>
+            
+            <textarea id="video_urls" rows="6" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 font-mono text-sm" placeholder="https://website-video.com/nonton-video-1..."></textarea>
+            
+            <div class="mt-4 flex gap-4">
+                <button onclick="startScrape('video')" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                    🚀 Mulai Scrape Video
+                </button>
+            </div>
+        </div>
+
+        <div id="panel-cosplay" class="bg-white p-6 rounded-b-lg shadow-xl hidden-panel">
+            <h2 class="text-xl font-bold mb-4 text-gray-800 flex items-center gap-2">
+                <span class="text-pink-600">Cosplay</span> Mass Scraper
+            </h2>
+            <p class="text-sm text-gray-500 mb-4">Paste link postingan CosplayTele (satu per baris).</p>
+            
+            <textarea id="cosplay_urls" rows="6" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 font-mono text-sm" placeholder="https://cosplaytele.com/karakter-cosplay-1..."></textarea>
+            
+            <div class="mt-4 flex gap-4">
+                <button onclick="startScrape('cosplay')" class="flex-1 bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 px-6 rounded-lg transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                    🌸 Mulai Scrape Cosplay
+                </button>
+            </div>
+        </div>
+
+        <div class="mt-8 bg-white p-6 rounded-lg shadow-lg border border-gray-200">
+            <div class="flex justify-between items-center mb-2">
+                <span class="font-bold text-gray-700">Status Proses</span>
+                <span id="progress-text" class="text-sm font-mono bg-gray-100 px-2 py-1 rounded">0%</span>
+            </div>
+            
+            <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden mb-6">
+                <div id="progress-bar" class="bg-green-500 h-full transition-all duration-300 w-0 relative">
+                    <div class="absolute inset-0 bg-white/30 animate-[shimmer_2s_infinite]"></div>
+                </div>
+            </div>
+
+            <div class="bg-gray-900 rounded-lg overflow-hidden border border-gray-700 shadow-inner">
+                <div class="flex justify-between items-center bg-gray-800 px-4 py-2 border-b border-gray-700">
+                    <span class="text-xs font-mono text-gray-400">CONSOLE LOG</span>
+                    <button onclick="clearLog()" class="text-xs text-gray-400 hover:text-white hover:bg-gray-700 px-2 py-1 rounded transition">Clear</button>
+                </div>
+                <div id="log" class="h-64 overflow-y-auto p-4 font-mono text-xs text-green-400 space-y-1">
+                    <div class="text-gray-500 italic">Menunggu perintah...</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer class="mt-auto py-6 text-center text-gray-500 text-sm">
+        &copy; 2026 BokepTube Admin Panel
+    </footer>
+
+    <script>
+        // Tab Switching Logic
+        function switchTab(tab) {
+            // Hide all panels
+            document.getElementById('panel-video').classList.add('hidden-panel');
+            document.getElementById('panel-cosplay').classList.add('hidden-panel');
+            
+            // Reset tab styles
+            document.getElementById('tab-video').classList.remove('active-tab', 'text-blue-600');
+            document.getElementById('tab-cosplay').classList.remove('active-tab', 'text-pink-600');
+
+            // Show selected panel & Activate tab
+            document.getElementById(`panel-${tab}`).classList.remove('hidden-panel');
+            const activeBtn = document.getElementById(`tab-${tab}`);
+            activeBtn.classList.add('active-tab');
+            
+            if (tab === 'video') activeBtn.classList.add('text-blue-600');
+            if (tab === 'cosplay') activeBtn.classList.add('text-pink-600');
+        }
+
+        const logDiv = document.getElementById('log');
+        const pBar = document.getElementById('progress-bar');
+        const pText = document.getElementById('progress-text');
+
+        function logMessage(msg, type = 'info') {
+            const color = type === 'error' ? 'text-red-400' : (type === 'success' ? 'text-green-400' : 'text-gray-300');
+            logDiv.innerHTML += `<div class="${color} border-b border-gray-800/50 pb-0.5 mb-0.5">${msg}</div>`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function clearLog() {
+            logDiv.innerHTML = '<div class="text-gray-500 italic">Log dibersihkan.</div>';
+        }
+
+        async function startScrape(type) {
+            const inputId = type === 'video' ? 'video_urls' : 'cosplay_urls';
+            const endpoint = type === 'video' ? '/api/scrape' : '/api/scrape-cosplay';
+            
+            const rawText = document.getElementById(inputId).value;
+            const urls = rawText.split('\n').map(u => u.trim()).filter(u => u);
+
+            if (urls.length === 0) return alert('Masukkan setidaknya satu URL!');
+
+            // UI Reset
+            logDiv.innerHTML = '';
+            logMessage(`🚀 Memulai scraping ${urls.length} URL untuk kategori: ${type.toUpperCase()}...`, 'info');
+            pBar.style.width = '0%';
+            
+            let done = 0;
+            let success = 0;
+            let failed = 0;
+
+            for (const url of urls) {
+                const currentIndex = done + 1;
+                logMessage(`[${currentIndex}/${urls.length}] Memproses: ${url.substring(0, 40)}...`);
+
+                try {
+                    const response = await fetch(endpoint, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ url })
+                    });
+                    
+                    const resultText = await response.text();
+                    
+                    if (resultText.includes('✅') || resultText.includes('Berhasil')) {
+                        success++;
+                        logMessage(resultText, 'success');
+                    } else {
+                        failed++;
+                        logMessage(resultText, 'error');
+                    }
+                } catch (err) {
+                    failed++;
+                    logMessage(`❌ Network Error: ${err.message}`, 'error');
+                }
+
+                done++;
+                const percent = Math.round((done / urls.length) * 100);
+                pBar.style.width = percent + '%';
+                pText.textContent = percent + '%';
+                
+                // Delay agar tidak dianggap DOS Attack
+                await new Promise(r => setTimeout(r, 800));
+            }
+
+            logMessage(`🏁 SELESAI! Sukses: ${success}, Gagal: ${failed}`, 'info');
+            if(success > 0) logMessage('💡 Cache Homepage telah dibersihkan otomatis.', 'info');
+        }
+    </script>
+</body>
+</html>
