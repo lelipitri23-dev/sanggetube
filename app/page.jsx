@@ -1,3 +1,5 @@
+export const runtime = 'nodejs';
+
 import dbConnect from '@/lib/db';
 import Video from '@/models/Video';
 import VideoCard from '@/components/VideoCard';
