@@ -1,12 +1,12 @@
 import Link from 'next/link';
 
-export default function Pagination({ currentPage, totalPages, searchParams = {} }) {
+export default function Pagination({ currentPage, totalPages, basePath = '', searchParams = {} }) {
   if (totalPages <= 1) return null;
 
   const createPageUrl = (page) => {
     const params = new URLSearchParams(searchParams);
     params.set('page', page);
-    return `?${params.toString()}`;
+    return `${basePath}?${params.toString()}`;
   };
 
   return (

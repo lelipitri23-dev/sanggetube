@@ -15,8 +15,8 @@ const categories = [
 
 const quickLinks = [
   { label: 'Beranda', href: '/' },
-  { label: 'Terbaru', href: '/category/bokep-terbaru' },
-  { label: 'Terpopuler', href: '/category/bokep-indo' },
+  { label: 'Terbaru', href: '/terbaru' },
+  { label: 'Terpopuler', href: '/popular' },
   { label: 'Cari Video', href: '/search' },
 ];
 
