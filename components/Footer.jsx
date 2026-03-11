@@ -17,7 +17,7 @@ const quickLinks = [
   { label: 'Beranda', href: '/' },
   { label: 'Terbaru', href: '/terbaru' },
   { label: 'Terpopuler', href: '/popular' },
-  { label: 'Cari Video', href: '/search' },
+  { label: 'Filter', href: '/filter' },
 ];
 
 export default function Footer({ siteName = 'KingBokep' }) {

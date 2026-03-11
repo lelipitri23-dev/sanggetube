@@ -43,6 +43,7 @@ export default function Header({ siteName, logoUrl, q }) {
               <Link href="/" className="text-gray-300 hover:text-pink-500 transition font-medium px-3 py-1 rounded-lg hover:bg-black">Beranda</Link>
               <Link href="/terbaru" className="text-gray-300 hover:text-pink-500 transition font-medium px-3 py-1 rounded-lg hover:bg-black">Terbaru</Link>
               <Link href="/popular" className="text-gray-300 hover:text-yellow-400 transition font-medium px-3 py-1 rounded-lg hover:bg-black">Popular</Link>
+              <Link href="/filter" className="text-gray-300 hover:text-purple-400 transition font-medium px-3 py-1 rounded-lg hover:bg-black">Filter</Link>
               <Link href="/category/bokep-bocil" className="text-gray-300 hover:text-pink-500 transition font-medium px-3 py-1 rounded-lg hover:bg-black">Bocil</Link>
               <Link href="/tag/avtub" className="text-gray-300 hover:text-pink-500 transition font-medium px-3 py-1 rounded-lg hover:bg-black">AVTub</Link>
               <Link href="/category/bokep-viral" className="text-gray-300 hover:text-pink-500 transition font-medium px-3 py-1 rounded-lg hover:bg-black">Viral</Link>
