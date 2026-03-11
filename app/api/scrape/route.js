@@ -61,17 +61,21 @@ async function uploadFromUrl(url, slug) {
   }
 }
 
-// Convert ISO 8601 duration (e.g., PT1H2M30S) to seconds
+// Convert ISO 8601 duration to seconds
+// Supports: PT1H2M30S and P0DT0H12M36S formats
 function isoToSeconds(isoDuration) {
-  const timeRegex = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)(?:\.\d+)?S)?/;
-  const match = isoDuration.match(timeRegex);
+  if (!isoDuration) return 0;
+  // Full ISO 8601: P[n]DT[n]H[n]M[n]S
+  const fullRegex = /P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)(?:\.\d+)?S)?/;
+  const match = isoDuration.match(fullRegex);
   if (!match) return 0;
-  
-  const hours = parseInt(match[1]) || 0;
-  const minutes = parseInt(match[2]) || 0;
-  const seconds = parseInt(match[3]) || 0;
-  
-  return hours * 3600 + minutes * 60 + seconds;
+
+  const days    = parseInt(match[1]) || 0;
+  const hours   = parseInt(match[2]) || 0;
+  const minutes = parseInt(match[3]) || 0;
+  const seconds = parseInt(match[4]) || 0;
+
+  return days * 86400 + hours * 3600 + minutes * 60 + seconds;
 }
 
 
